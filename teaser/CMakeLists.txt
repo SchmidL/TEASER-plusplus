@@ -65,6 +65,7 @@ target_include_directories(teaser_registration
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PRIVATE
         $<BUILD_INTERFACE:${spectra_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 if(NOT BUILD_SHARED_LIBS)
   set_property(TARGET teaser_registration PROPERTY POSITION_INDEPENDENT_CODE 1)
@@ -72,8 +73,7 @@ endif()
 
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
-    target_link_libraries(teaser_registration PUBLIC OpenMP::OpenMP_CXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+    target_link_libraries(teaser_registration PRIVATE OpenMP::OpenMP_CXX)
 endif()
 
 add_library(teaserpp::teaser_registration ALIAS teaser_registration)
