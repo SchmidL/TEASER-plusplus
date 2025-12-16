@@ -1,0 +1,33 @@
+name: C++ Build and Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive' # Wichtig, falls es Submodule gibt
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake libeigen3-dev libboost-all-dev
+
+    - name: Configure CMake
+      run: cmake -S . -B build -DTEASERPP_BUILD_TESTS=ON
+
+    - name: Build project
+      run: cmake --build build --config Release
+
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure -C Release
